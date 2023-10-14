@@ -5,6 +5,15 @@ const auth = async(req, res, next) => {
     try {
         const token = req.header('Authorization').replace('Bearer ', '');
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // Vérifiez si le token a expiré
+        const tokenExpDate = new Date(decoded.exp * 1000); // Convertissez la date d'expiration Unix en millisecondes
+        const now = new Date();
+
+        if (now >= tokenExpDate) {
+            throw new Error('Token expiré');
+        }
+
         const user = await User.findOne({ _id: decoded._id });
 
         if (!user) {
@@ -15,7 +24,11 @@ const auth = async(req, res, next) => {
         req.user = user;
         next();
     } catch (error) {
-        res.status(401).send({ error: 'Unauthorized' });
+        if (error.message === 'Token expiré') {
+            res.status(401).send({ error: 'Token expiré' });
+        } else {
+            res.status(401).send({ error: 'Unauthorized' });
+        }
     }
 };
 

@@ -28,11 +28,9 @@ const epargneSchema = new mongoose.Schema({
         ref: 'User'
     }
 });
-
-const Epargne = mongoose.model('Epargne', epargneSchema);
 epargneSchema.methods.getTransactions = async function() {
     const transactions = await mongoose.model('Transaction').find({ epargne: this._id });
     return transactions;
 };
-
+const Epargne = mongoose.model('Epargne', epargneSchema);
 module.exports = Epargne;
