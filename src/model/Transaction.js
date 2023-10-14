@@ -17,7 +17,6 @@ const transactionSchema = new mongoose.Schema({
     },
     reference: {
         type: String,
-
     },
     epargne: {
         type: mongoose.Schema.Types.ObjectId,

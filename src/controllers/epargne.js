@@ -1,4 +1,4 @@
-const Epargne = require('../models/Epargne');
+const Epargne = require('../model/Epargne');
 exports.createEpargne = async(req, res) => {
     const { nom, solde, dateFin } = req.body;
     try {

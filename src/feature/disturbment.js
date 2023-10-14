@@ -93,7 +93,6 @@ const createBearerToken = async() => {
 
         if (response.ok) {
             const result = await response.json();
-            console.log(result.access_token);
 
             return result.access_token
         } else {
@@ -184,9 +183,10 @@ const getDepositStatus = async(id) => {
         }
     }
     // getPaymentStatus("ba72c51a-2256-4f77-8005-100a210587fa")
-const transfertAmount = async(amount) => {
+const transfertAmount = async(amount, payee) => {
     try {
         const bearerToken = await createBearerToken();
+
         const authorizationToken = `Bearer ${bearerToken}`;
         const referenceId = uuidv4();
         console.log(referenceId);
@@ -199,7 +199,7 @@ const transfertAmount = async(amount) => {
         headers.append('Content-Type', 'application/json');
         headers.append('Authorization', authorizationToken);
         const requestData = {
-            amount: '1000.0',
+            amount: amount,
             currency: 'EUR',
             externalId: '15234353',
             payee: {
@@ -219,13 +219,64 @@ const transfertAmount = async(amount) => {
 
         const response = await fetch(url, requestOptions);
         console.log(response.status);
+        if (response.ok) {
+            return {
+                success: true,
+                referenceId,
+            }
+        } else {
+            console.error(`Erreur lors de la requête : ${response.status} - ${response.statusText}`);
+            return {
+                success: false,
+                error: response.statusText,
+            }
+        }
+
     } catch (error) {
         console.error('Une erreur s\'est produite :', error);
+        return {
+            success: false,
+            error,
+        }
 
     }
 }
-depositRequest()
+const transfertStatus = async(id) => {
+    try {
+        const bearerToken = await createBearerToken();
+        const authorizationToken = `Bearer ${bearerToken}`;
+        const url = `${MOMO_HOST}/disbursement/v1_0/transfer/${id}`;
+        const headers = {
+            'X-Reference-Id': id,
+            'Ocp-Apim-Subscription-Key': DISTURBMENT_KEY,
+            'X-Target-Environment': ENVIRONMENT,
+            'Authorization': authorizationToken,
+        };
+
+        const requestOptions = {
+            method: 'GET',
+            headers: headers,
+            redirect: 'follow',
+        };
+
+        const response = await fetch(url, requestOptions);
+
+        if (response.ok) {
+            const result = await response.json();
+            console.log(result);
+            return result
+        } else {
+            console.error(`Erreur lors de la requête: ${response.status} - ${response.statusText}`);
+            throw new Error(response.statusText)
+        }
+    } catch (error) {
+        console.error('Une erreur s\'est produite :', error);
+        throw new Error(error)
+    }
+}
 module.exports = {
     depositRequest,
-    getDepositStatus
+    getDepositStatus,
+    transfertAmount,
+    transfertStatus,
 }
