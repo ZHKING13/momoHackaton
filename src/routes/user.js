@@ -8,9 +8,31 @@ const router = express.Router();
  *   post:
  *     summary: Inscription d'un nouvel utilisateur
  *     description: Utilisé pour enregistrer un nouvel utilisateur.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nom:
+ *                 type: string
+ *                 description: Nom de l'utilisateur (entre 2 et 50 caractères).
+ *               prenom:
+ *                 type: string
+ *                 description: Prénom de l'utilisateur.
+ *               email:
+ *                 type: string
+ *                 description: Adresse e-mail de l'utilisateur (unique).
+ *               numero:
+ *                 type: string
+ *                 description: Numéro de téléphone de l'utilisateur (unique).
+ *               motDePasse:
+ *                 type: string
+ *                 description: Mot de passe de l'utilisateur (au moins 8 caractères).
  *     responses:
  *       200:
- *         description: Utilisateur enregistré avec succès un otp est envoyer surle mail de l'utilisateur.
+ *         description: Utilisateur enregistré avec succès.
  *       400:
  *         description: Échec de l'inscription de l'utilisateur.
  */
@@ -22,6 +44,19 @@ router.route("/register").post(registerUser);
  *   post:
  *     summary: Connexion de l'utilisateur
  *     description: Utilisé pour connecter un utilisateur existant.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: Adresse e-mail de l'utilisateur.
+ *               motDePasse:
+ *                 type: string
+ *                 description: Mot de passe de l'utilisateur.
  *     responses:
  *       200:
  *         description: Utilisateur connecté avec succès.
@@ -36,6 +71,19 @@ router.route("/login").post(loginUser);
  *   post:
  *     summary: Vérification de l'adresse e-mail
  *     description: Utilisé pour vérifier l'adresse e-mail d'un utilisateur.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: Adresse e-mail de l'utilisateur.
+ *               code:
+ *                  type: number
+ *                  description: Le code OTP recu par mail.
  *     responses:
  *       200:
  *         description: Adresse e-mail vérifiée avec succès.
@@ -50,6 +98,16 @@ router.route("/verify").post(emailVerification);
  *   post:
  *     summary: Réinitialisation du mot de passe
  *     description: Utilisé pour réinitialiser le mot de passe d'un utilisateur.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: Adresse e-mail de l'utilisateur.
  *     responses:
  *       200:
  *         description: Mot de passe réinitialisé avec succès.
@@ -71,6 +129,16 @@ router.route("/forgot").post(resetPassword);
  *         schema:
  *           type: string
  *         description: Jeton de réinitialisation du mot de passe.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               motDePasse:
+ *                 type: string
+ *                 description: Nouveau mot de passe de l'utilisateur (au moins 8 caractères).
  *     responses:
  *       200:
  *         description: Mot de passe réinitialisé avec succès en utilisant le jeton.

@@ -4,6 +4,8 @@ const cors = require('cors');
 const router = require('./src/routes/user');
 const { epargneRouter } = require('./src/routes/epargne');
 const { transactionRouter } = require('./src/routes/transaction');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./Swagger');
 require('./config/DB');
 const port = process.env.PORT;
 const bodyParser = express.json;
@@ -15,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
     res.send('Hello World!')
 });
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/v1", router)
 app.use("/api/v1", epargneRouter)
 app.use("/api/v1", transactionRouter)
