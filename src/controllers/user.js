@@ -27,6 +27,7 @@ exports.registerUser = async(req, res) => {
     }
 }
 
+
 exports.loginUser = async(req, res) => {
     try {
         const user = await User.findOne({ email: req.body.email });
@@ -74,7 +75,7 @@ exports.emailVerification = async(req, res) => {
         const { email, code } = req.body;
         const isMatch = await verifyOtp(email, code);
         if (!isMatch) {
-            return res.status(400).json({ error: 'Invalid OTP' });
+            return res.status(401).json({ error: 'Invalid OTP' });
         }
         const user = await User.findOne({ email });
         user.isVerified = true;
