@@ -1,10 +1,35 @@
 const express = require('express');
-const { registerUser, loginUser, emailVerification, resetPassword } = require('../controllers/user');
+const { registerUser, loginUser, emailVerification, resetPassword, sendEmailOTP } = require('../controllers/user');
 const router = express.Router();
 
 /**
  * @swagger
- * /api/v1/register:
+ * /api/v1/user/otp:
+ *   post:
+ *     summary: envoyer un code de vérification
+ *     description: utilisé pour envoyer un code de vérification de l'adresse e-mail de l'utilisateur.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                description: Adresse e-mail de l'utilisateur (obligatoire).
+ *                required: true
+ *              
+ *     responses:
+ *       200:
+ *         description: Otp envoyer avec succès.
+ *       401:
+ *         description: Echec d'envoi du code de vérification.
+ */
+router.route("/otp").post(sendEmailOTP);
+/**
+ * @swagger
+ * /api/v1/user/register:
  *   post:
  *     summary: Inscription d'un nouvel utilisateur
  *     description: Utilisé pour enregistrer un nouvel utilisateur.
@@ -40,7 +65,7 @@ router.route("/register").post(registerUser);
 
 /**
  * @swagger
- * /api/v1/login:
+ * /api/v1/user/login:
  *   post:
  *     summary: Connexion de l'utilisateur
  *     description: Utilisé pour connecter un utilisateur existant.
@@ -60,14 +85,18 @@ router.route("/register").post(registerUser);
  *     responses:
  *       200:
  *         description: Utilisateur connecté avec succès.
+ *       400:
+ *         description: Mot de passe de l'utilisateur invalide.
  *       401:
  *         description: Échec de la connexion de l'utilisateur.
+ *       404:
+ *         description:Aucun utilisateur trouvé.
  */
 router.route("/login").post(loginUser);
 
 /**
  * @swagger
- * /api/v1/verify:
+ * /api/v1/user/verify:
  *   post:
  *     summary: Vérification de l'adresse e-mail
  *     description: Utilisé pour vérifier l'adresse e-mail d'un utilisateur.
@@ -94,7 +123,7 @@ router.route("/verify").post(emailVerification);
 
 /**
  * @swagger
- * /api/v1/forgot:
+ * /api/v1/user/forgot:
  *   post:
  *     summary: Réinitialisation du mot de passe
  *     description: Utilisé pour réinitialiser le mot de passe d'un utilisateur.
@@ -118,7 +147,7 @@ router.route("/forgot").post(resetPassword);
 
 /**
  * @swagger
- * /api/v1/reset/{token}:
+ * /api/v1/user/reset/{token}:
  *   post:
  *     summary: Réinitialisation du mot de passe avec jeton
  *     description: Utilisé pour réinitialiser le mot de passe d'un utilisateur en utilisant un jeton de réinitialisation.

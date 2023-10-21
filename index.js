@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
     res.send('Hello World!')
 });
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use("/api/v1", router)
+app.use("/api/v1/user", router)
 app.use("/api/v1", epargneRouter)
 app.use("/api/v1", transactionRouter)
 

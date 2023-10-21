@@ -8,13 +8,6 @@ exports.registerUser = async(req, res) => {
         const user = new User(req.body);
         await user.save();
         const token = await user.generateAuthToken();
-        // send otp
-        await sendOTP({
-            email: user.email,
-            subject: 'Email verification',
-            message: 'Votre code de vérification est le suivant :'
-        });;
-
         res.status(201).json({
             succes: true,
             message: 'User created successfully',
@@ -45,7 +38,7 @@ exports.loginUser = async(req, res) => {
             user
         })
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(401).json({ error: error.message });
     }
 }
 exports.getUsers = async(req, res) => {
@@ -69,7 +62,24 @@ exports.getUserById = async(req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+exports.sendEmailOTP = async(req, res) => {
+    try {
+        const { email } = req.body
+        if (!email) res.status(401).json({ error: "email obligatoire" });
 
+        await sendOTP({
+            email,
+            subject: 'Email verification',
+            message: 'Votre code de vérification est le suivant :'
+        });;
+        res.status(201).json({
+            succes: true,
+            message: "OTP envoyer avec succès"
+        })
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
 exports.emailVerification = async(req, res) => {
     try {
         const { email, code } = req.body;
@@ -77,9 +87,6 @@ exports.emailVerification = async(req, res) => {
         if (!isMatch) {
             return res.status(401).json({ error: 'Invalid OTP' });
         }
-        const user = await User.findOne({ email });
-        user.isVerified = true;
-        await user.save();
         await deletOtp(email);
         res.status(200).json({
             succes: true,
@@ -87,7 +94,7 @@ exports.emailVerification = async(req, res) => {
             valide: isMatch
         });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(401).json({ error: error.message });
 
     }
 }
