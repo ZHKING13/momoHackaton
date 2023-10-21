@@ -163,14 +163,6 @@ const confirmeTransaction = async(req, res) => {
     }
 }
 
-const depot = async(req, res) => {
-    try {
-        const { montant } = req.body;
-    } catch (error) {
-
-    }
-
-}
 module.exports = {
     newTransaction,
     getTransactions,
