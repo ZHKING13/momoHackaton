@@ -1,12 +1,18 @@
 const express = require('express');
 const { registerUser, loginUser, emailVerification, resetPassword, sendEmailOTP } = require('../controllers/user');
 const router = express.Router();
-
+/**
+ * @swagger
+ * tags:
+ *   - name: Utilisateur
+ *     description: Opérations liées aux utilisateurs
+ */
 /**
  * @swagger
  * /api/v1/user/otp:
  *   post:
  *     summary: Envoi d'un code de vérification par e-mail
+ *     tags: [Utilisateur]
  *     description: Utilisé pour envoyer un code de vérification à l'adresse e-mail de l'utilisateur.
  *     requestBody:
  *       required: true
@@ -32,6 +38,7 @@ router.route("/otp").post(sendEmailOTP);
  * /api/v1/user/verify:
  *   post:
  *     summary: Vérification de l'adresse e-mail
+ *     tags: [Utilisateur]
  *     description: Utilisé pour vérifier l'adresse e-mail d'un utilisateur.
  *     requestBody:
  *       required: true
@@ -62,6 +69,7 @@ router.route("/verify").post(emailVerification);
  * /api/v1/user/register:
  *   post:
  *     summary: Inscription d'un nouvel utilisateur
+ *     tags: [Utilisateur]
  *     description: Utilisé pour enregistrer un nouvel utilisateur.
  *     requestBody:
  *       required: true
@@ -104,6 +112,7 @@ router.route("/register").post(registerUser);
  * /api/v1/user/login:
  *   post:
  *     summary: Connexion de l'utilisateur
+ *     tags: [Utilisateur]
  *     description: Utilisé pour connecter un utilisateur existant.
  *     requestBody:
  *       required: true
@@ -139,6 +148,7 @@ router.route("/login").post(loginUser);
  * /api/v1/user/forgot:
  *   post:
  *     summary: Réinitialisation du mot de passe
+ *     tags: [Utilisateur]
  *     description: Utilisé pour réinitialiser le mot de passe d'un utilisateur.
  *     requestBody:
  *       required: true
@@ -165,6 +175,7 @@ router.route("/forgot").post(resetPassword);
  * /api/v1/user/reset/{token}:
  *   post:
  *     summary: Réinitialisation du mot de passe avec jeton
+ *     tags: [Utilisateur]
  *     description: Utilisé pour réinitialiser le mot de passe d'un utilisateur en utilisant un jeton de réinitialisation.
  *     parameters:
  *       - in: path

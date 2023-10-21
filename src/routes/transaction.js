@@ -2,12 +2,18 @@ const express = require('express');
 const auth = require('../middleware/auth');
 const { newTransaction, confirmeTransaction } = require('../controllers/transaction');
 const router = express.Router();
-
+/**
+ * @swagger
+ * tags:
+ *   - name: Transaction
+ *     description: Opérations liées aux transactions
+ */
 /**
  * @swagger
  * /api/v1/transaction:
  *   post:
  *     summary: Créer une nouvelle transaction
+ *     tags: [Transaction]
  *     description: Utilisé pour créer une nouvelle transaction.
  *     security:
  *       - BearerAuth: []
@@ -43,7 +49,8 @@ router.route("/transaction").post(auth, newTransaction);
  * @swagger
  * /api/v1/transaction/{id}:
  *   patch:
- *     summary: Confirmer une transaction
+ *     summary: Confirmer une transaction 
+ *     tags: [Transaction]
  *     description: Utilisé pour confirmer une transaction existante.
  *     security:
  *       - BearerAuth: []
