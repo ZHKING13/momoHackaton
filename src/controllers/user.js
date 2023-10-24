@@ -65,7 +65,9 @@ exports.getUserById = async(req, res) => {
 exports.sendEmailOTP = async(req, res) => {
     try {
         const { email } = req.body
-        if (!email) res.status(401).json({ error: "email obligatoire" });
+        if (!email) {
+            return res.status(401).json({ error: "email obligatoire" });
+        }
 
         let otp = await sendOTP({
             email,
