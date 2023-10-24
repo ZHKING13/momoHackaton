@@ -48,7 +48,7 @@ exports.deleteEpargne = async(req, res) => {
 exports.getEpargneById = async(req, res) => {
     try {
         const epargne = await Epargne.findById(req.params.id);
-        const transactions = await epargne.getTransactions();
+        const transactions = await Epargne.transactions
         if (!epargne) {
             return res.status(404).json({ error: 'Epargne not found' });
         }
