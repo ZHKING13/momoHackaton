@@ -4,7 +4,7 @@ const { sendEmail } = require('../util/sendEmail');
 const { AUTH_MAIL } = process.env;
 const sendOTP = async({ email, subject, message, duration = 10 }) => {
     try {
-        if (!email && !subject && !message) {
+        if (!email || !subject || !message) {
             throw new Error('email, subject and message are required');
         }
         await OTP.deleteOne({ email });

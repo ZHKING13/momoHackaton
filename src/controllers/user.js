@@ -67,11 +67,16 @@ exports.sendEmailOTP = async(req, res) => {
         const { email } = req.body
         if (!email) res.status(401).json({ error: "email obligatoire" });
 
-        await sendOTP({
+        let otp = await sendOTP({
             email,
             subject: 'Email verification',
             message: 'Votre code de vérification est le suivant :'
-        });;
+        });
+        if (!otp) {
+            return res.status(400).json({
+                error: 'une erreur est survenue pendant l\'envoi de otp'
+            });
+        }
         res.status(201).json({
             succes: true,
             message: "OTP envoyer avec succès"
