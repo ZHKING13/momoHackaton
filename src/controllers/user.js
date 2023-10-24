@@ -65,6 +65,7 @@ exports.getUserById = async(req, res) => {
 exports.sendEmailOTP = async(req, res) => {
     try {
         const { email } = req.body
+        console.log(req.body)
         if (!email) {
             return res.status(401).json({ error: "email obligatoire" });
         }
@@ -156,13 +157,18 @@ exports.resetPassword = async(req, res) => {
 }
 exports.updatePassword = async(req, res) => {
     try {
-        const { password } = req.body;
+        const { password, email } = req.body;
         if (!password) {
-            return res.status(400).json({ error: 'Password not provided' });
+            return res.status(401).json({ error: 'Password not provided' });
         }
-        const user = await User.findById(req.user._id);
+        const user = await User.findOne({ email });
         user.password = password;
-        await user.save();
+        const newUser = await user.save();
+        res.status(200).json({
+            succes: true,
+            message: 'Password updated successfully',
+            newUser
+        });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

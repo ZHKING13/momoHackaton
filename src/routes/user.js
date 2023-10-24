@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerUser, loginUser, emailVerification, resetPassword, sendEmailOTP } = require('../controllers/user');
+const { registerUser, loginUser, emailVerification, resetPassword, sendEmailOTP, updatePassword } = require('../controllers/user');
 const router = express.Router();
 /**
  * @swagger
@@ -163,27 +163,22 @@ router.route("/login").post(loginUser);
  *                 example: user@example.com
  *     responses:
  *       200:
- *         description: Mot de passe réinitialisé avec succès.
+ *         description: OTP de réinitialisation envoyé avec succès.
  *       401:
- *         description: Échec de la réinitialisation du mot de passe.
+ *         description: Échec de l'envoi d'OTP de réinitialisation.
+ *       404:
+ *         description: Aucun utilisateur trouver.
  */
 
 router.route("/forgot").post(resetPassword);
 
 /**
  * @swagger
- * /api/v1/user/reset/{token}:
+ * /api/v1/user/reset:
  *   post:
- *     summary: Réinitialisation du mot de passe avec jeton
+ *     summary: Réinitialisation du mot de passe 
  *     tags: [Utilisateur]
  *     description: Utilisé pour réinitialiser le mot de passe d'un utilisateur en utilisant un jeton de réinitialisation.
- *     parameters:
- *       - in: path
- *         name: token
- *         required: true
- *         schema:
- *           type: string
- *         description: Jeton de réinitialisation du mot de passe.
  *     requestBody:
  *       required: true
  *       content:
@@ -191,17 +186,21 @@ router.route("/forgot").post(resetPassword);
  *           schema:
  *             type: object
  *             properties:
+ *               email:
+ *                 type: string
+ *                 description: email de l'utilisateur.
+ *                 example: example@email.com
  *               motDePasse:
  *                 type: string
  *                 description: Nouveau mot de passe de l'utilisateur (au moins 8 caractères).
  *                 example: newpassword123
  *     responses:
  *       200:
- *         description: Mot de passe réinitialisé avec succès en utilisant le jeton.
+ *         description: Mot de passe réinitialisé avec succès.
  *       401:
- *         description: Échec de la réinitialisation du mot de passe avec le jeton.
+ *         description: Échec de la réinitialisation du mot de passe.
  */
 
-router.route("/reset/:token").post(resetPassword);
+router.route("/reset").post(updatePassword);
 
 module.exports = router;
